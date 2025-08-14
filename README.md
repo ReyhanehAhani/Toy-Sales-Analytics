@@ -72,5 +72,3 @@ The dataset includes 8126 records with the following fields:
 
 ---
 
-> ✅ For more projects, visit [Reyhaneh Ahani's GitHub](https://github.com/ReyhanehAhani)
-
