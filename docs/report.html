@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+<meta charset="utf-8"/><meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Toy Sales — Analyst report</title>
+<style>
+body { font-family: system-ui, sans-serif; max-width: 800px; margin: 2rem auto; padding: 0 1rem; line-height: 1.55; color: #1d1d1f; }
+pre { background: #f5f9fc; padding: 1rem; overflow: auto; border-radius: 8px; border: 1px solid #e2e8f0; font-size: 0.85rem; }
+a { color: #2b7fd4; }
+h1, h2 { letter-spacing: -0.02em; }
+</style></head><body>
+<p><a href="index.html">← Data lab hub</a> · <a href="dashboard.html">Interactive dashboard</a></p>
+<h1>Toy Sales — Analyst case study</h1>
+<h2>Business question</h2>
+<p>Where do we earn money (region × time), which SKUs drive profit, and are margins structurally sound?</p>
+<h2>Data</h2>
+<p>Published demo grain + KPI tables in `analytics_stack/published/` (regenerable via `tools/build_published_deliverables.py`). Columns follow the notebook: `Product`, `Date`, `Region`, units, cost/price, engineered `Revenue` / `Profit`.</p>
+<h2>KPI definitions</h2>
+<ul><li>**Revenue** = Units × Unit price  </li><li>**Profit** = Revenue − Units × Unit cost  </li><li>**Portfolio margin** = ΣProfit / ΣRevenue  </li><li>**YoY** = compare summed monthly revenue across consecutive calendar years on aligned months (see `analytics/sql/kpis.sql`)</li></ul>
+<h2>Quality gates</h2>
+<p>Automated checks in `analytics/quality/validate_published.py` (non-nulls, region enum, margin bounds).</p>
+<h2>SQL analytics</h2>
+<p>DuckDB executes the same KPI logic you would ship to a warehouse layer: `analytics/run_sql_kpis.py` materializes `analytics/reports/sql_kpi_summary.txt`.</p>
+<h2>Takeaways (demo data)</h2>
+<p>Open `docs/dashboard.html` after enabling GitHub Pages, or run the Plotly dashboard locally — trend + SKU pareto should match the SQL aggregates.</p>
+<h2>Limitations</h2>
+<p>Demo CSV is synthetic but schema-aligned; swap in cleaned notebook exports for production narratives.</p><h2>SQL output snapshot</h2><pre></pre>
+</body></html>

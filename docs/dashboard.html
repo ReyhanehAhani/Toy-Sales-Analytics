@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <title>Toy Sales — published dashboard</title>
+  <script src="https://cdn.plot.ly/plotly-2.27.0.min.js"></script>
+  <style>
+    :root { --bg:#f5f9fc; --card:#fff; --accent:#2b7fd4; --text:#1d1d1f; --muted:#6e6e73; }
+    body { font-family: system-ui, sans-serif; margin:0; background:var(--bg); color:var(--text); }
+    header { padding:1.25rem 1.5rem; background:var(--card); border-bottom:1px solid #e2e8f0; }
+    h1 { margin:0; font-size:1.25rem; }
+    .sub { color:var(--muted); font-size:0.9rem; margin-top:0.35rem; }
+    main { padding:1rem 1.25rem 2rem; max-width:1200px; margin:0 auto; }
+    .kpis { display:grid; grid-template-columns:repeat(auto-fit,minmax(160px,1fr)); gap:12px; margin-bottom:16px; }
+    .kpi { background:var(--card); border-radius:14px; padding:14px 16px; border:1px solid #e2e8f0; }
+    .kpi label { display:block; font-size:0.72rem; text-transform:uppercase; letter-spacing:0.06em; color:var(--muted); }
+    .kpi strong { font-size:1.35rem; }
+    .grid2 { display:grid; grid-template-columns:1fr; gap:14px; }
+    @media(min-width:900px){ .grid2 { grid-template-columns:1.1fr 0.9fr; } }
+    .panel { background:var(--card); border-radius:14px; padding:8px; border:1px solid #e2e8f0; min-height:320px; }
+    footer { font-size:0.8rem; color:var(--muted); padding:0 1.25rem 2rem; max-width:1200px; margin:0 auto; }
+    a { color:var(--accent); }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Toy sales analytics — live dashboard</h1>
+    <div class="sub">Built from the same aggregates as <code>month_region_kpis.csv</code> / <code>product_rankings.csv</code> — import those files into Power BI or Tableau for the same story.</div>
+  </header>
+  <main>
+    <div class="kpis" id="kpiRow"></div>
+    <div class="grid2">
+      <div class="panel" id="lineChart"></div>
+      <div class="panel" id="barChart"></div>
+    </div>
+  </main>
+  <footer>
+    Open this file locally or via GitHub Pages. CSV twins live in this folder for BI tools.
+  </footer>
+  <script>
+    const DATA = {"months": [{"Year": 2022, "Month": 1, "Revenue": 337796.83999999997, "label": "2022-01"}, {"Year": 2022, "Month": 2, "Revenue": 354608.98, "label": "2022-02"}, {"Year": 2022, "Month": 3, "Revenue": 361048.41, "label": "2022-03"}, {"Year": 2022, "Month": 4, "Revenue": 272603.29000000004, "label": "2022-04"}, {"Year": 2022, "Month": 5, "Revenue": 290140.41000000003, "label": "2022-05"}, {"Year": 2022, "Month": 6, "Revenue": 291341.95, "label": "2022-06"}, {"Year": 2022, "Month": 7, "Revenue": 228255.55, "label": "2022-07"}, {"Year": 2022, "Month": 8, "Revenue": 253593.93, "label": "2022-08"}, {"Year": 2022, "Month": 9, "Revenue": 247089.86, "label": "2022-09"}, {"Year": 2022, "Month": 10, "Revenue": 239751.4, "label": "2022-10"}, {"Year": 2022, "Month": 11, "Revenue": 274997.78, "label": "2022-11"}, {"Year": 2022, "Month": 12, "Revenue": 283951.6, "label": "2022-12"}, {"Year": 2023, "Month": 1, "Revenue": 289176.97, "label": "2023-01"}, {"Year": 2023, "Month": 2, "Revenue": 240754.97, "label": "2023-02"}, {"Year": 2023, "Month": 3, "Revenue": 266664.92, "label": "2023-03"}, {"Year": 2023, "Month": 4, "Revenue": 248389.59000000003, "label": "2023-04"}, {"Year": 2023, "Month": 5, "Revenue": 217798.47999999998, "label": "2023-05"}, {"Year": 2023, "Month": 6, "Revenue": 285229.83, "label": "2023-06"}, {"Year": 2023, "Month": 7, "Revenue": 247192.56, "label": "2023-07"}, {"Year": 2023, "Month": 8, "Revenue": 267039.02, "label": "2023-08"}, {"Year": 2023, "Month": 9, "Revenue": 237188.9, "label": "2023-09"}, {"Year": 2023, "Month": 10, "Revenue": 17496.63, "label": "2023-10"}], "by_region_month": [{"Year": 2022, "Month": 1, "Region": "A", "Revenue": 108422.9, "Profit": 69191.3, "Units_Sold": 4368}, {"Year": 2022, "Month": 1, "Region": "B", "Revenue": 107487.18, "Profit": 69753.04000000001, "Units_Sold": 4285}, {"Year": 2022, "Month": 1, "Region": "C", "Revenue": 121886.76, "Profit": 76987.34, "Units_Sold": 5064}, {"Year": 2022, "Month": 2, "Region": "A", "Revenue": 148656.6, "Profit": 108390.26, "Units_Sold": 5485}, {"Year": 2022, "Month": 2, "Region": "B", "Revenue": 126763.81, "Profit": 84599.16, "Units_Sold": 4982}, {"Year": 2022, "Month": 2, "Region": "C", "Revenue": 79188.57, "Profit": 54603.26, "Units_Sold": 3034}, {"Year": 2022, "Month": 3, "Region": "A", "Revenue": 92023.98, "Profit": 60182.03, "Units_Sold": 3846}, {"Year": 2022, "Month": 3, "Region": "B", "Revenue": 141671.91999999998, "Profit": 96599.87, "Units_Sold": 5271}, {"Year": 2022, "Month": 3, "Region": "C", "Revenue": 127352.51, "Profit": 84435.97, "Units_Sold": 4681}, {"Year": 2022, "Month": 4, "Region": "A", "Revenue": 108717.58, "Profit": 77179.26, "Units_Sold": 3827}, {"Year": 2022, "Month": 4, "Region": "B", "Revenue": 65361.78, "Profit": 42203.44, "Units_Sold": 2590}, {"Year": 2022, "Month": 4, "Region": "C", "Revenue": 98523.93000000001, "Profit": 66218.95999999999, "Units_Sold": 3565}, {"Year": 2022, "Month": 5, "Region": "A", "Revenue": 117335.5, "Profit": 77426.31999999999, "Units_Sold": 4482}, {"Year": 2022, "Month": 5, "Region": "B", "Revenue": 102828.81, "Profit": 68927.13, "Units_Sold": 4126}, {"Year": 2022, "Month": 5, "Region": "C", "Revenue": 69976.1, "Profit": 47010.5, "Units_Sold": 2749}, {"Year": 2022, "Month": 6, "Region": "A", "Revenue": 69902.25, "Profit": 47400.24, "Units_Sold": 2784}, {"Year": 2022, "Month": 6, "Region": "B", "Revenue": 112734.89, "Profit": 78023.93, "Units_Sold": 4172}, {"Year": 2022, "Month": 6, "Region": "C", "Revenue": 108704.81, "Profit": 73446.58, "Units_Sold": 4207}, {"Year": 2022, "Month": 7, "Region": "A", "Revenue": 66408.33, "Profit": 44091.259999999995, "Units_Sold": 2704}, {"Year": 2022, "Month": 7, "Region": "B", "Revenue": 84195.93, "Profit": 55839.5, "Units_Sold": 3506}, {"Year": 2022, "Month": 7, "Region": "C", "Revenue": 77651.29000000001, "Profit": 46791.07, "Units_Sold": 3402}, {"Year": 2022, "Month": 8, "Region": "A", "Revenue": 119282.93, "Profit": 76865.51, "Units_Sold": 4951}, {"Year": 2022, "Month": 8, "Region": "B", "Revenue": 66809.45, "Profit": 41795.88, "Units_Sold": 2868}, {"Year": 2022, "Month": 8, "Region": "C", "Revenue": 67501.55, "Profit": 42726.99, "Units_Sold": 2903}, {"Year": 2022, "Month": 9, "Region": "A", "Revenue": 121407.41, "Profit": 81029.59, "Units_Sold": 4621}, {"Year": 2022, "Month": 9, "Region": "B", "Revenue": 68907.26, "Profit": 42445.99, "Units_Sold": 2670}, {"Year": 2022, "Month": 9, "Region": "C", "Revenue": 56775.19, "Profit": 39055.74, "Units_Sold": 2095}, {"Year": 2022, "Month": 10, "Region": "A", "Revenue": 89963.76000000001, "Profit": 54102.780000000006, "Units_Sold": 3787}, {"Year": 2022, "Month": 10, "Region": "B", "Revenue": 93255.59999999999, "Profit": 63019.13, "Units_Sold": 3810}, {"Year": 2022, "Month": 10, "Region": "C", "Revenue": 56532.04, "Profit": 36948.4, "Units_Sold": 2029}, {"Year": 2022, "Month": 11, "Region": "A", "Revenue": 88564.14, "Profit": 65449.25, "Units_Sold": 3121}, {"Year": 2022, "Month": 11, "Region": "B", "Revenue": 97538.91, "Profit": 69015.74, "Units_Sold": 3351}, {"Year": 2022, "Month": 11, "Region": "C", "Revenue": 88894.73, "Profit": 58343.34, "Units_Sold": 3355}, {"Year": 2022, "Month": 12, "Region": "A", "Revenue": 72506.29, "Profit": 49772.97, "Units_Sold": 2855}, {"Year": 2022, "Month": 12, "Region": "B", "Revenue": 100028.32, "Profit": 63665.229999999996, "Units_Sold": 3832}, {"Year": 2022, "Month": 12, "Region": "C", "Revenue": 111416.99, "Profit": 74482.31, "Units_Sold": 4123}, {"Year": 2023, "Month": 1, "Region": "A", "Revenue": 76099.33, "Profit": 51297.82, "Units_Sold": 2910}, {"Year": 2023, "Month": 1, "Region": "B", "Revenue": 100984.76, "Profit": 63381.71, "Units_Sold": 3924}, {"Year": 2023, "Month": 1, "Region": "C", "Revenue": 112092.88, "Profit": 73211.0, "Units_Sold": 4588}, {"Year": 2023, "Month": 2, "Region": "A", "Revenue": 98971.38, "Profit": 62969.25, "Units_Sold": 3974}, {"Year": 2023, "Month": 2, "Region": "B", "Revenue": 65761.34999999999, "Profit": 41050.53, "Units_Sold": 2814}, {"Year": 2023, "Month": 2, "Region": "C", "Revenue": 76022.24, "Profit": 47828.18, "Units_Sold": 3254}, {"Year": 2023, "Month": 3, "Region": "A", "Revenue": 80951.01, "Profit": 51164.87, "Units_Sold": 3356}, {"Year": 2023, "Month": 3, "Region": "B", "Revenue": 115915.77, "Profit": 74478.93, "Units_Sold": 4282}, {"Year": 2023, "Month": 3, "Region": "C", "Revenue": 69798.14, "Profit": 42476.73, "Units_Sold": 2984}, {"Year": 2023, "Month": 4, "Region": "A", "Revenue": 91686.52, "Profit": 58713.39, "Units_Sold": 3683}, {"Year": 2023, "Month": 4, "Region": "B", "Revenue": 90832.13, "Profit": 63761.32, "Units_Sold": 3385}, {"Year": 2023, "Month": 4, "Region": "C", "Revenue": 65870.94, "Profit": 41603.4, "Units_Sold": 2662}, {"Year": 2023, "Month": 5, "Region": "A", "Revenue": 61752.25, "Profit": 39567.5, "Units_Sold": 2670}, {"Year": 2023, "Month": 5, "Region": "B", "Revenue": 89553.64, "Profit": 54346.270000000004, "Units_Sold": 3990}, {"Year": 2023, "Month": 5, "Region": "C", "Revenue": 66492.59, "Profit": 39700.32, "Units_Sold": 3083}, {"Year": 2023, "Month": 6, "Region": "A", "Revenue": 73086.19, "Profit": 49860.01, "Units_Sold": 2861}, {"Year": 2023, "Month": 6, "Region": "B", "Revenue": 96345.86, "Profit": 60683.35, "Units_Sold": 3880}, {"Year": 2023, "Month": 6, "Region": "C", "Revenue": 115797.78, "Profit": 78538.81999999999, "Units_Sold": 4246}, {"Year": 2023, "Month": 7, "Region": "A", "Revenue": 70223.90000000001, "Profit": 43901.21, "Units_Sold": 3176}, {"Year": 2023, "Month": 7, "Region": "B", "Revenue": 97510.12, "Profit": 64333.659999999996, "Units_Sold": 3981}, {"Year": 2023, "Month": 7, "Region": "C", "Revenue": 79458.54000000001, "Profit": 49733.14, "Units_Sold": 3367}, {"Year": 2023, "Month": 8, "Region": "A", "Revenue": 71348.68, "Profit": 48438.92999999999, "Units_Sold": 2964}, {"Year": 2023, "Month": 8, "Region": "B", "Revenue": 88748.01, "Profit": 57177.24, "Units_Sold": 3225}, {"Year": 2023, "Month": 8, "Region": "C", "Revenue": 106942.33, "Profit": 67153.63, "Units_Sold": 4385}, {"Year": 2023, "Month": 9, "Region": "A", "Revenue": 90420.37, "Profit": 56831.78999999999, "Units_Sold": 3945}, {"Year": 2023, "Month": 9, "Region": "B", "Revenue": 76329.34, "Profit": 45024.18, "Units_Sold": 3256}, {"Year": 2023, "Month": 9, "Region": "C", "Revenue": 70439.19, "Profit": 47635.090000000004, "Units_Sold": 2626}, {"Year": 2023, "Month": 10, "Region": "A", "Revenue": 5500.2, "Profit": 3363.98, "Units_Sold": 206}, {"Year": 2023, "Month": 10, "Region": "B", "Revenue": 4967.1, "Profit": 2898.9800000000005, "Units_Sold": 202}, {"Year": 2023, "Month": 10, "Region": "C", "Revenue": 7029.33, "Profit": 3279.78, "Units_Sold": 329}], "products": [{"Product": "Toy SKU 23", "Revenue": 263598.18, "Profit": 178018.09, "Units_Sold": 9353, "margin_pct": 0.6753388433865515}, {"Product": "Toy SKU 22", "Revenue": 247892.99000000002, "Profit": 165081.0, "Units_Sold": 9782, "margin_pct": 0.6659365397948526}, {"Product": "Toy SKU 14", "Revenue": 249040.99, "Profit": 155590.85, "Units_Sold": 10579, "margin_pct": 0.6247600043671526}, {"Product": "Toy SKU 20", "Revenue": 227092.01, "Profit": 149922.87, "Units_Sold": 9061, "margin_pct": 0.6601855785238767}, {"Product": "Toy SKU 28", "Revenue": 212111.19, "Profit": 147073.51, "Units_Sold": 8020, "margin_pct": 0.693379307334045}, {"Product": "Toy SKU 11", "Revenue": 228631.17, "Profit": 145137.2, "Units_Sold": 9519, "margin_pct": 0.6348093306787522}, {"Product": "Toy SKU 09", "Revenue": 219456.73, "Profit": 144542.54, "Units_Sold": 8905, "margin_pct": 0.658637992099855}, {"Product": "Toy SKU 04", "Revenue": 200766.13, "Profit": 139264.19, "Units_Sold": 7425, "margin_pct": 0.6936637668913577}, {"Product": "Toy SKU 17", "Revenue": 193594.86000000002, "Profit": 135306.5, "Units_Sold": 7004, "margin_pct": 0.6989157666685984}, {"Product": "Toy SKU 07", "Revenue": 197110.71, "Profit": 133923.75, "Units_Sold": 7548, "margin_pct": 0.6794341616444891}, {"Product": "Toy SKU 10", "Revenue": 209841.11000000002, "Profit": 132547.99, "Units_Sold": 8523, "margin_pct": 0.6316588298641767}, {"Product": "Toy SKU 16", "Revenue": 188999.49, "Profit": 130664.42, "Units_Sold": 7312, "margin_pct": 0.6913480031083682}], "kpis": {"revenue": 5752111.869999999, "profit": 3772424.28, "skus": 30}};
+
+    const fmt = (n) => new Intl.NumberFormat(undefined, { style: 'currency', currency: 'USD', maximumFractionDigits: 0 }).format(n);
+    document.getElementById('kpiRow').innerHTML = `
+      <div class="kpi"><label>Total revenue</label><strong>${fmt(DATA.kpis.revenue)}</strong></div>
+      <div class="kpi"><label>Total profit</label><strong>${fmt(DATA.kpis.profit)}</strong></div>
+      <div class="kpi"><label>Active SKUs</label><strong>${DATA.kpis.skus}</strong></div>
+    `;
+
+    const t = DATA.months;
+    Plotly.newPlot('lineChart', [{
+      x: t.map(d => d.label),
+      y: t.map(d => d.Revenue),
+      type: 'scatter',
+      mode: 'lines+markers',
+      line: { color: '#2b7fd4', width: 3 },
+      name: 'Revenue'
+    }], {
+      margin: { t: 20, r: 20, b: 48, l: 56 },
+      title: 'Revenue by month',
+      paper_bgcolor: 'rgba(0,0,0,0)',
+      plot_bgcolor: '#fbfcfe',
+      font: { family: 'system-ui, sans-serif' }
+    }, { responsive: true });
+
+    const p = DATA.products;
+    Plotly.newPlot('barChart', [{
+      y: p.map(r => r.Product).reverse(),
+      x: p.map(r => r.Profit).reverse(),
+      type: 'bar',
+      orientation: 'h',
+      marker: { color: '#2b7fd4' }
+    }], {
+      margin: { t: 20, r: 20, b: 40, l: 120 },
+      title: 'Top products by profit',
+      paper_bgcolor: 'rgba(0,0,0,0)',
+      plot_bgcolor: '#fbfcfe'
+    }, { responsive: true });
+  </script>
+</body>
+</html>

@@ -83,3 +83,16 @@ The dataset includes 8126 records with the following fields:
 
 ---
 
+## SQL + KPI + quality + automated report
+
+```bash
+pip install -r requirements-analytics-stack.txt
+python analytics/quality/validate_published.py
+python analytics/run_sql_kpis.py
+python analytics/reports/build_report.py
+python tools/build_docs.py   # fills docs/ for GitHub Pages
+```
+
+GitHub Actions workflow `.github/workflows/data-stack.yml` runs the same validations on every push.
+
+---
