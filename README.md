@@ -70,6 +70,7 @@ The dataset includes 8126 records with the following fields:
 - `Toy-Sales-Analytics.ipynb`: Main analysis notebook
 - `Toy-Sales-Analytics-report.pdf`: Summarized business report with key visuals and conclusions
 - `analytics_stack/`: **Portfolio track — Tableau, Power BI, Figma** (exports + playbooks)
+- `analytics_stack/published/`: **Ready-to-view** `dashboard.html`, `wireframe_dashboard.svg`, and CSV twins for BI tools (regenerate via `tools/build_published_deliverables.py`)
 - `scripts/export_for_bi.py`: Pandas helper to emit BI-ready CSVs after you save a cleaned table from the notebook
 
 ---
