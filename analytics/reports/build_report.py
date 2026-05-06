@@ -1,12 +1,11 @@
 #!/usr/bin/env python3
-"""Build a simple static HTML report (case study + SQL summary + links)."""
+"""Build a simple static HTML report (case study + links)."""
 from __future__ import annotations
 
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[2]
 MD = ROOT / "analytics" / "reports" / "case_study.md"
-SQL_TXT = ROOT / "analytics" / "reports" / "sql_kpi_summary.txt"
 OUT = ROOT / "analytics" / "reports" / "ANALYST_REPORT.html"
 DOCS_OUT = ROOT / "docs" / "report.html"
 
@@ -46,10 +45,7 @@ def md_to_html(md: str) -> str:
 
 def main() -> None:
     md = MD.read_text(encoding="utf-8")
-    sql_block = ""
-    if SQL_TXT.exists():
-        sql_block = f"<h2>SQL output snapshot</h2><pre>{esc(SQL_TXT.read_text(encoding='utf-8'))}</pre>"
-    body = md_to_html(md) + sql_block
+    body = md_to_html(md)
     html = f"""<!DOCTYPE html>
 <html lang="en"><head>
 <meta charset="utf-8"/><meta name="viewport" content="width=device-width,initial-scale=1"/>
