@@ -15,7 +15,7 @@ h1, h2 { letter-spacing: -0.02em; }
 <h2>Data</h2>
 <p>Published demo grain + KPI tables in `analytics_stack/published/` (regenerable via `tools/build_published_deliverables.py`). Columns follow the notebook: `Product`, `Date`, `Region`, units, cost/price, engineered `Revenue` / `Profit`.</p>
 <h2>KPI definitions</h2>
-<ul><li>**Revenue** = Units × Unit price  </li><li>**Profit** = Revenue − Units × Unit cost  </li><li>**Portfolio margin** = ΣProfit / ΣRevenue  </li><li>**YoY** = compare summed monthly revenue across consecutive calendar years on aligned months (see `analytics/sql/kpis.sql`)</li></ul>
+<ul><li><strong>Revenue</strong> = Units × Unit price  </li><li><strong>Profit</strong> = Revenue − Units × Unit cost  </li><li><strong>Portfolio margin</strong> = ΣProfit / ΣRevenue  </li><li><strong>YoY</strong> = compare summed monthly revenue across consecutive calendar years on aligned months (see `analytics/sql/kpis.sql`)</li></ul>
 <h2>Quality gates</h2>
 <p>Automated checks in `analytics/quality/validate_published.py` (non-nulls, region enum, margin bounds).</p>
 <h2>SQL analytics</h2>
