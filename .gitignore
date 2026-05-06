@@ -1,0 +1,3 @@
+# Ignore generated BI extracts (keep directory via .gitkeep)
+analytics_stack/exports/*.csv
+!analytics_stack/exports/.gitkeep
